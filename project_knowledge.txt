@@ -1,0 +1,57 @@
+Self-Correcting Agentic RAG Framework using Local LLM
+
+Project overview:
+This project is a self-correcting agentic retrieval-augmented generation (RAG) system that works with local LLMs and local knowledge sources. It is designed to answer questions using a private knowledge base without depending on cloud APIs for the main reasoning flow.
+
+Core idea:
+The system receives a user question, decides whether it should answer directly, retrieve from local documents, or use web search, and then generates a grounded answer. After answer generation, it validates the response for hallucination and answer quality. If the answer is weak or unsupported, the system retries using additional evidence.
+
+Technology stack:
+- Python
+- LangGraph for orchestration
+- LangChain for chains, prompts, and document processing
+- ChromaDB for vector storage
+- Ollama for local LLM and embeddings
+- Tavily API for web search fallback
+- PDF and TXT ingestion for document-based knowledge
+
+Key features:
+1. Query routing: The router classifies each user question as direct, vectorstore, or websearch.
+2. Local document retrieval: The system searches the stored vector database for relevant chunks.
+3. Relevance grading: Retrieved documents are filtered to keep only relevant ones.
+4. Web search fallback: If no useful local matches are found, the system performs a web search for additional evidence.
+5. Answer generation: The model creates an answer using the selected context only.
+6. Hallucination check: The generated answer is checked to ensure it is grounded in the context.
+7. Answer quality grading: The answer is checked for completeness and relevance to the user question.
+8. Retry loop: If the answer fails verification, the model repeats the process with additional evidence.
+
+Project workflow:
+- The user enters a question.
+- The route_query node determines the correct branch.
+- Direct questions go directly to the LLM.
+- Document questions go to retrieval and relevance filtering.
+- If no relevant local documents exist, the system falls back to web search.
+- The generator produces a response from the relevant context.
+- Hallucination and quality graders verify the answer.
+- If the answer is weak, the system retries and improves it.
+
+Use cases:
+This system is useful for document-based Q&A, internal knowledge assistants, project documentation analysis, educational support, research assistance, and local private AI workflows. It can be adapted to company documents, research papers, project reports, manuals, or personal knowledge bases.
+
+Project objective:
+The goal of this project is to build a local, private, self-correcting AI assistant that provides grounded answers using both local documents and web evidence when necessary.
+
+Benefits:
+- runs locally with Ollama
+- no permanent cloud dependency for core retrieval and reasoning
+- grounded responses using local documents
+- improved trustworthiness through self-checking and retries
+- suitable for private or sensitive knowledge domains
+
+Limitations:
+- response quality depends on the quality and relevance of the ingested documents
+- if documents are weak, irrelevant, or missing, the model cannot answer well
+- web search requires a valid Tavily API key
+- the project is best for document-grounded question answering rather than broad open-domain reasoning only
+
+This project is a general-purpose RAG framework for local document intelligence and not limited to one specific organization. It becomes specialized when the user adds organization-specific documents to the knowledge base.
